@@ -99,13 +99,12 @@ Allows to add custom authentication to a request after you've captured say a bea
         /// <summary>
         /// Username to use for NTLM or Basic Authentication
         /// </summary>
-
         [Category("Authentication")]
         [Description("Global Username to use for NTLM or Basic Authentication.\r\nYou can also use 'AutoLogin' to use your current Windows Credentials for NTLM authentication and leave the password blank")]
         public string Username { get; set;  }
 
         /// <summary>
-        /// Username to use for NTLM or Basic Authentication
+        /// Password to use for NTLM or Basic Authentication
         /// </summary>
         [Category("Authentication")]
         [PasswordPropertyText(true)]
@@ -113,6 +112,44 @@ Allows to add custom authentication to a request after you've captured say a bea
         )]
         public string Password { get; set; }
 
+        /// <summary>
+        /// Token Service Scope
+        /// </summary>
+        [Category("Authentication")]
+        [Description("Use this option if you are planning to authentication users in the Users List via a Secure Token Service using the Resource Owner Password OpenID Connect flow."
+        )]
+        public bool UseResourceOwnerPasswordAuthentation { get; set; }
+
+        /// <summary>
+        /// Token Service URL
+        /// </summary>
+        [Category("Authentication")]
+        [Description("The URL of the Token Service that the Resource Owner Password Flow request will be sent to obtain an Access Token.")]
+        public string TokenServiceUrl { get; set; }
+
+        /// <summary>
+        /// Token Service Client ID
+        /// </summary>
+        [Category("Authentication")]
+        [Description("The Client ID to sent to the Token Service in order to obtain an Access Token.")]
+        public string ClientId { get; set; }
+
+        /// <summary>
+        /// Token Service Client Secret
+        /// </summary>
+        [Category("Authentication")]
+        [PasswordPropertyText(true)]
+        [Description("The Client Secret sent to the Token Service in order to obtain an Access Token. Important: This value is saved in the request configuration in encrypted format."
+        )]
+        public string ClientSecret { get; set; }
+
+        /// <summary>
+        /// Token Service Scope
+        /// </summary>
+        [Category("Authentication")]
+        [Description("The list of Scopes sent to the Token Service in order to obtain an Access Token."
+        )]
+        public string Scope { get; set; }
 
         [Browsable(false)]
         [Description("Optional specific users assigned to this test.")]
