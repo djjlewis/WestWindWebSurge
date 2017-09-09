@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using IdentityModel.Client;
 using Westwind.Utilities.InternetTools;
 
 namespace WebSurge
@@ -521,6 +522,33 @@ namespace WebSurge
                 return;
             }
 
+            if (App.Configuration.StressTester.UseResourceOwnerPasswordAuthentication)
+            {
+                if (string.IsNullOrEmpty(user.AccessToken))
+                {
+                    // no access token yet, so read the username and password from the form parameters...
+                    var firstLoginForm = user.LoginUrls.FirstOrDefault();
+                    if (firstLoginForm == null)
+                    {
+                        return;
+                    }
+                    var userNameKeyValue =
+                        firstLoginForm.FormVariables.SingleOrDefault(fv => fv.Key.ToLower() == "username");
+                    var passwordKeyValue =
+                        firstLoginForm.FormVariables.SingleOrDefault(fv => fv.Key.ToLower() == "password");
+
+                    var userName = userNameKeyValue?.Value;
+                    var password = passwordKeyValue?.Value;
+
+                    var accessToken = GetAccessToken(userName, password);
+
+                    user.AccessToken = accessToken;
+                }
+
+                client.WebRequest.Headers["Authorization"] = $"Bearer {user.AccessToken}";
+                return;
+            }
+
             // check login urls for a match
             if (user.LoginUrls == null || user.LoginUrls.Count == 0)
                 return;
@@ -571,6 +599,20 @@ namespace WebSurge
                 request.RequestContent = client.GetPostBuffer();
             }
 
+        }
+
+        private string GetAccessToken(string userName, string password)
+        {
+            var tokenServiceUrl = App.Configuration.StressTester.TokenServiceUrl;
+            var clientId = App.Configuration.StressTester.ClientId;
+            var clientSecret = App.Configuration.StressTester.ClientSecret;
+            var scope = App.Configuration.StressTester.Scope;
+
+            var tokenClient = new TokenClient(tokenServiceUrl, clientId, clientSecret);
+
+            var response = tokenClient.RequestResourceOwnerPasswordAsync(userName, password, scope).Result;
+
+            return response.AccessToken;
         }
 
         private void SetHttpHeader(HttpRequestHeader header, HttpClient client)

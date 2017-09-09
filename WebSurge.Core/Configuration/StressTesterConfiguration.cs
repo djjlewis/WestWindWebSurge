@@ -118,7 +118,7 @@ Allows to add custom authentication to a request after you've captured say a bea
         [Category("Authentication")]
         [Description("Use this option if you are planning to authentication users in the Users List via a Secure Token Service using the Resource Owner Password OpenID Connect flow."
         )]
-        public bool UseResourceOwnerPasswordAuthentation { get; set; }
+        public bool UseResourceOwnerPasswordAuthentication { get; set; }
 
         /// <summary>
         /// Token Service URL

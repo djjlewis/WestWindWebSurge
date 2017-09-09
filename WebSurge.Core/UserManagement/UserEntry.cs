@@ -29,6 +29,12 @@ namespace WebSurge
         [Description("Optional - Complete Authorization Cookie that's associated with this user.")]
         public string AuthCookie { get; set; }
 
+        /// <summary>
+        /// Complete Access Token that's associated with this user
+        /// </summary>
+        [Description("Optional - Complete Access Token that's associated with this user.")]
+        public string AccessToken { get; set; }
+
         public UserEntry()
         {
             LoginUrls = new List<LoginFormEntry>();
